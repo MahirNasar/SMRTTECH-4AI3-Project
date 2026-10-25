@@ -1,0 +1,33 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 900" preserveAspectRatio="none">
+  <defs>
+    <pattern id="wood" width="80" height="120" patternUnits="userSpaceOnUse">
+      <rect width="80" height="120" fill="#c98745"/>
+      <path d="M12 0v120M55 0v120" stroke="#e0a66b" stroke-width="18" opacity=".28"/>
+      <path d="M0 28h80M0 87h80" stroke="#a86730" stroke-width="2" opacity=".18"/>
+    </pattern>
+    <linearGradient id="warmth" x1="0" y1="0" x2="1" y2="1">
+      <stop stop-color="#f3c18a" stop-opacity=".55"/>
+      <stop offset=".5" stop-color="#ad682c" stop-opacity=".12"/>
+      <stop offset="1" stop-color="#f0b67a" stop-opacity=".45"/>
+    </linearGradient>
+  </defs>
+  <rect width="500" height="900" fill="#a96b32"/>
+  <rect x="14" y="8" width="472" height="884" fill="url(#wood)" stroke="#e1a464" stroke-width="10"/>
+  <rect x="14" y="8" width="472" height="884" fill="url(#warmth)"/>
+  <g fill="none" stroke="#fff8e9" stroke-width="4" opacity=".96">
+    <rect x="42" y="30" width="416" height="840"/>
+    <path d="M42 450h416"/>
+    <circle cx="250" cy="450" r="47"/>
+    <path d="M110 30v200c0 78 62 140 140 140s140-62 140-140V30"/>
+    <path d="M178 30v185c0 40 32 72 72 72s72-32 72-72V30"/>
+    <path d="M178 215h144M178 215a72 72 0 0 0 144 0"/>
+    <path d="M110 870V670c0-78 62-140 140-140s140 62 140 140v200"/>
+    <path d="M178 870V685c0-40 32-72 72-72s72 32 72 72v185"/>
+    <path d="M178 685h144M178 685a72 72 0 0 0 144 0"/>
+    <path d="M250 30v185M250 685v185"/>
+  </g>
+  <g fill="none" stroke="#fff8e9" stroke-width="3" stroke-dasharray="8 8" opacity=".9">
+    <path d="M202 215a48 48 0 0 1 96 0"/>
+    <path d="M202 685a48 48 0 0 0 96 0"/>
+  </g>
+</svg>
