@@ -1,0 +1,12 @@
+# Python
+__pycache__/
+*.pyc
+.ipynb_checkpoints/
+.venv/
+*.egg-info/
+# macOS
+.DS_Store
+# training outputs (large / machine-specific)
+cnn/outputs/
+*.pt
+!cnn/results/final/*.pt
