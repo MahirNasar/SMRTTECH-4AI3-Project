@@ -1,1 +1,15 @@
-
+name: nbacnn
+channels: [conda-forge]
+dependencies:
+  - python=3.11
+  - numpy
+  - pandas
+  - matplotlib
+  - scikit-learn
+  - pyyaml
+  - pytest
+  - jupyterlab
+  - ipympl
+  - pytorch          # from conda-forge, not pip (avoids the OpenMP clash)
+  - tensorboard
+  - umap-learn
