@@ -1,0 +1,14 @@
+model:
+  in_ch: 23
+  emb: 32
+  dropout: 0.2
+
+views:
+  split_mode: "odd_even"
+  season_drop: 0.2
+  weight_noise: 0.5
+  weight_drop: 0.5
+  pos_drop: 0.5
+  chart_mode: "drop_one"
+  chart_drop: 0.5
+  chart_noise: 0.5
