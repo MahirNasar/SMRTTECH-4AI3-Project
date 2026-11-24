@@ -1,14 +1,38 @@
-model:
+# file: configs/default.yaml
+seed: 0
+device: auto            # auto | mps | cpu
+data_dir: ../data/processed
+out_dir: outputs/runs
+run_name: baseline
+tensorboard: true
+early_stop: true
+
+model:                  # Viroz
   in_ch: 23
   emb: 32
   dropout: 0.2
 
-views:
-  split_mode: "odd_even"
-  season_drop: 0.2
-  weight_noise: 0.5
-  weight_drop: 0.5
-  pos_drop: 0.5
-  chart_mode: "drop_one"
-  chart_drop: 0.5
-  chart_noise: 0.5
+views:                  # Viroz
+  split_mode: odd_even  # odd_even | random
+  season_drop: 0.2      # chance of hiding each season in a view (training only)
+  weight_noise: 0.5     # std of noise added to weight_z per view
+  weight_drop: 0.5      # chance of hiding weight in a view
+  pos_drop: 0.5         # chance of hiding position channels in a view
+  chart_mode: drop_one  # drop_one | same | off
+  chart_drop: 0.5       # chance of hiding the shot chart in a view
+  chart_noise: 0.5      # std of noise added to the standardized shot chart
+
+train:                  # Mahir
+  lr: 1.0e-3
+  weight_decay: 1.0e-4
+  batch_size: 128
+  epochs: 200
+  warmup_epochs: 5
+  tau: 0.1
+
+convergence:            # Mahir
+  patience: 20
+  min_delta: 0.005
+  target_top1: 0.65
+  too_good_top1: 0.90
+  gap_alarm: 0.30
