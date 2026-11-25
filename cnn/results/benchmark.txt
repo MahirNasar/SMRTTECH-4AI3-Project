@@ -1,0 +1,13 @@
+CPU vs MPS benchmark (MA-1)  python scripts/benchmark_device.py
+Date: 2026-11-25
+Machine: Apple M2 (4 performance + 4 efficiency cores), 8 GB unified memory, macOS 14.4.1, on AC power
+Software: torch 2.14.1 (conda-forge, arm64), torch threads 4
+Workload: one full training step (make_views + 2 forward passes + NT-Xent + backward + AdamW) on fake players,
+          50 timed steps after 10 warm-up steps, with torch.mps.synchronize() before each timer read.
+
+batch  64: cpu=  35.8 ms/step  mps=   7.2 ms/step
+batch 128: cpu=  66.9 ms/step  mps=  12.5 ms/step
+batch 256: cpu= 126.5 ms/step  mps=  23.5 ms/step
+
+Decision: MPS is ~5.3x faster at the default batch size (128) -> configs/default.yaml sets device: mps.
+(For reference, the prototype's 2-thread cloud CPU took ~39 ms/step at batch 128.)

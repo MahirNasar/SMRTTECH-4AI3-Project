@@ -1,6 +1,6 @@
 # file: configs/default.yaml
 seed: 0
-device: auto            # auto | mps | cpu
+device: mps             # auto | mps | cpu  (mps is ~5x faster on the M2: results/benchmark.txt)
 data_dir: ../data/processed
 out_dir: outputs/runs
 run_name: baseline
