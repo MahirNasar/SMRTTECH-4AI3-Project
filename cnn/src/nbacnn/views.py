@@ -4,6 +4,7 @@ import torch
 from .data import WEIGHT_CH, POS_CH, MASK_CH
 
 View = namedtuple("View", "grid mask chart")   # (B,23,26), (B,26), (B,2,24,25)
+CHART_MODES = ("drop_one", "same", "off")
 
 def _rand(shape, gen, device):
     return torch.rand(shape, generator=gen, device=device) if gen is not None else torch.rand(shape, device=device)
@@ -42,6 +43,8 @@ def apply_view(grid, chart, view_mask, cfg, gen=None, train=True):
     g[:, MASK_CH, :] = view_mask                              # played flag = seasons in this view
     c = chart
     mode = cfg.get("chart_mode", "drop_one")
+    if mode not in CHART_MODES:                               # e.g. False from an unquoted YAML `off`
+        raise ValueError(f"unknown chart_mode {mode!r}; expected one of {CHART_MODES}")
     if mode == "off":                                         # ablation: no shot chart at all
         c = torch.zeros_like(chart)
     if train:

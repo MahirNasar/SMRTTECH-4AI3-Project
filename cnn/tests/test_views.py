@@ -37,3 +37,13 @@ def test_full_view_is_the_whole_qualified_career():
     assert torch.equal(v.mask, batch.mask) and torch.equal(v.chart, batch.chart)
     # seasons under 500 minutes (mask 0) are dropped here too, so embedding sees what training saw
     assert torch.equal(v.grid, batch.grid * batch.mask[:, None, :])
+def test_unknown_chart_mode_fails_loudly():
+    import pytest
+    with pytest.raises(ValueError):
+        make_views(batch, {**CFG, "chart_mode": False})   # what an unquoted YAML `off` used to become
+
+def test_chart_off_hides_chart_in_training_and_embedding():
+    cfg = {**CFG, "chart_mode": "off"}
+    va, vb = make_views(batch, cfg)
+    assert va.chart.abs().max() == 0 and vb.chart.abs().max() == 0
+    assert full_view(batch, cfg).chart.abs().max() == 0
