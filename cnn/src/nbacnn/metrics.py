@@ -11,8 +11,9 @@ def two_halves(model, data, cfg, tau=0.1):
     va, vb = make_views(data, cfg, train=False)
     ha, za = model(*va)
     hb, zb = model(*vb)
-    sim = ha @ hb.T                                         # (P, P) cosine similarity of summaries
-    rank = (sim > sim.diag()[:, None]).sum(1)               # how many players beat the true partner
+    sim = torch.nan_to_num(ha @ hb.T, nan=float("-inf"))    # (P, P) cosine similarity; NaN = worst
+    rank = (sim >= sim.diag()[:, None]).sum(1) - 1          # players that beat OR tie the true partner
+    # Ties count against the model: a collapsed (all-identical) or NaN model must score ~0, not 1.0.
     loss = nt_xent(za, zb, tau).item()
     model.train(was_training)
     return {"top1": (rank == 0).float().mean().item(),
