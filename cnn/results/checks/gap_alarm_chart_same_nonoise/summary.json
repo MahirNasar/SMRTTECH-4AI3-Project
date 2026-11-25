@@ -1,0 +1,20 @@
+{
+  "best_epoch": 12,
+  "best_val_loss_norm": 0.8393961364240575,
+  "converged_epoch": 32,
+  "target_epoch": null,
+  "alarms": [
+    "GAP: val loss 1.16 vs train 0.68 at epoch 6: shortcut or overfitting"
+  ],
+  "final": {
+    "epoch": 32,
+    "lr": 0.0009534371804252727,
+    "train_loss_norm": 0.22917499088590212,
+    "val_loss_norm": 1.1709632115841035,
+    "val_top1": 0.41988950967788696,
+    "val_top5": 0.7900552749633789,
+    "train_top1": 0.530386745929718,
+    "seconds": 8.298200845718384
+  },
+  "device": "mps"
+}
