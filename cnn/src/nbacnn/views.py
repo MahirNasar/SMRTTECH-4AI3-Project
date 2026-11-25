@@ -84,4 +84,3 @@ def make_views(batch, cfg, gen=None, train=True):
 def full_view(batch, cfg=None):
     """Whole career, no augmentation: what we embed after training."""
     return _view(batch, batch.mask, cfg or {}, None, train=False)
-    return _view(batch, batch.mask, cfg or {}, None, train=False)
