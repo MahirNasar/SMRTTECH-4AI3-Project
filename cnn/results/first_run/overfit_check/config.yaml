@@ -1,0 +1,33 @@
+convergence:
+  gap_alarm: 0.3
+  min_delta: 0.005
+  patience: 20
+  target_top1: 0.65
+  too_good_top1: 0.9
+data_dir: ../data/processed
+device: mps
+early_stop: false
+model:
+  dropout: 0.2
+  emb: 32
+  in_ch: 23
+out_dir: outputs/runs
+run_name: overfit_check
+seed: 0
+tensorboard: false
+train:
+  batch_size: 32
+  epochs: 300
+  lr: 0.001
+  tau: 0.1
+  warmup_epochs: 5
+  weight_decay: 0.0001
+views:
+  chart_drop: 0.5
+  chart_mode: same
+  chart_noise: 0
+  pos_drop: 0
+  season_drop: 0
+  split_mode: odd_even
+  weight_drop: 0
+  weight_noise: 0

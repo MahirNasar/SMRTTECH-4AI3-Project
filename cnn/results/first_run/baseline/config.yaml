@@ -1,0 +1,33 @@
+convergence:
+  gap_alarm: 0.3
+  min_delta: 0.005
+  patience: 20
+  target_top1: 0.65
+  too_good_top1: 0.9
+data_dir: ../data/processed
+device: mps
+early_stop: true
+model:
+  dropout: 0.2
+  emb: 32
+  in_ch: 23
+out_dir: outputs/runs
+run_name: baseline
+seed: 0
+tensorboard: true
+train:
+  batch_size: 128
+  epochs: 200
+  lr: 0.001
+  tau: 0.1
+  warmup_epochs: 5
+  weight_decay: 0.0001
+views:
+  chart_drop: 0.5
+  chart_mode: drop_one
+  chart_noise: 0.5
+  pos_drop: 0.5
+  season_drop: 0.2
+  split_mode: odd_even
+  weight_drop: 0.5
+  weight_noise: 0.5

@@ -1,0 +1,18 @@
+{
+  "best_epoch": 110,
+  "best_val_loss_norm": 0.2830628484864716,
+  "converged_epoch": 130,
+  "target_epoch": 31,
+  "alarms": [],
+  "final": {
+    "epoch": 130,
+    "lr": 0.00028565371929847286,
+    "train_loss_norm": 0.2458524129188334,
+    "val_loss_norm": 0.28509596669349624,
+    "val_top1": 0.7237569093704224,
+    "val_top5": 0.9060773253440857,
+    "train_top1": 0.9171270728111267,
+    "seconds": 40.79316306114197
+  },
+  "device": "mps"
+}
