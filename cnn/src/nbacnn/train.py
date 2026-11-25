@@ -91,6 +91,7 @@ def train(cfg, data=None, live=None):
         live.update(None, tracker.converged_epoch, tracker.target_epoch, force=True)   # final redraw
     torch.save(model.state_dict(), run_dir / "last.pt")
     summary = dict(best_epoch=tracker.best_epoch, best_val_loss_norm=tracker.best,
+                   best_ckpt_epoch=tracker.best_ckpt_epoch, best_ckpt_val_loss_norm=tracker.best_ckpt,
                    converged_epoch=tracker.converged_epoch, target_epoch=tracker.target_epoch,
                    alarms=tracker.alarms, final=row, device=str(device))
     json.dump(summary, open(run_dir / "summary.json", "w"), indent=2)

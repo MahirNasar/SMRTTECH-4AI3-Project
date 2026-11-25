@@ -19,7 +19,7 @@ def run_record(run_dir):
     """One row of results for a finished run."""
     s = json.load(open(Path(run_dir) / "summary.json"))
     m = pd.read_csv(Path(run_dir) / "metrics.csv")
-    best = m[m.epoch == s["best_epoch"]].iloc[0]                 # the epoch best.pt was saved at
+    best = m[m.epoch == s.get("best_ckpt_epoch", s["best_epoch"])].iloc[0]   # the epoch best.pt was saved at
     return dict(final_val_top1=m.val_top1.iloc[-1], final_val_top5=m.val_top5.iloc[-1],
                 best_ckpt_val_top1=best.val_top1, peak_val_top1=m.val_top1.max(),
                 final_val_loss_norm=m.val_loss_norm.iloc[-1], final_train_top1=m.train_top1.iloc[-1],

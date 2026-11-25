@@ -6,13 +6,18 @@ class ConvergenceTracker:
     def __init__(self, patience=20, min_delta=0.005, target_top1=0.65, too_good_top1=0.90, gap_alarm=0.30):
         self.patience, self.min_delta, self.target_top1 = patience, min_delta, target_top1
         self.too_good_top1, self.gap_alarm = too_good_top1, gap_alarm
-        self.best, self.best_epoch = math.inf, 0
+        self.best, self.best_epoch = math.inf, 0                # last improvement > min_delta (convergence rule)
+        self.best_ckpt, self.best_ckpt_epoch = math.inf, 0      # lowest val loss seen (best.pt)
         self.converged_epoch = self.target_epoch = None
         self.alarms = []
 
     def update(self, epoch, train_loss_norm, val_loss_norm, val_top1):
-        improved = val_loss_norm < self.best - self.min_delta
-        if improved:
+        """Returns True when val loss reaches a new minimum (save best.pt). The convergence rule
+        separately ignores improvements smaller than min_delta."""
+        new_min = val_loss_norm < self.best_ckpt
+        if new_min:
+            self.best_ckpt, self.best_ckpt_epoch = val_loss_norm, epoch
+        if val_loss_norm < self.best - self.min_delta:
             self.best, self.best_epoch = val_loss_norm, epoch
         if self.target_epoch is None and val_top1 >= self.target_top1:
             self.target_epoch = epoch
@@ -24,7 +29,7 @@ class ConvergenceTracker:
         if val_top1 >= self.too_good_top1:
             self._alarm("TOO GOOD", f"val top-1 {val_top1:.2f} at epoch {epoch}: check that view B hides "
                                     "weight, position and the shot chart")
-        return improved
+        return new_min
 
     def _alarm(self, kind, msg):
         if not any(a.startswith(kind) for a in self.alarms):   # report each kind once
