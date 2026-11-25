@@ -3,12 +3,14 @@ import pandas as pd, torch
 from .views import full_view
 
 @torch.no_grad()
-def embed_all(model, splits):
-    """splits: {"train": PlayerTensors, "val": ..., "test": ...} -> DataFrame, one row per player."""
+def embed_all(model, splits, views_cfg=None):
+    """splits: {"train": PlayerTensors, "val": ..., "test": ...} -> DataFrame, one row per player.
+    views_cfg: the `views:` block the checkpoint was trained with, so e.g. a chart_mode=off model
+    is embedded without the shot chart it never learned from."""
     model.eval()
     frames = []
     for name, data in splits.items():
-        h, _ = model(*full_view(data))                     # h, not z: the projection head is discarded
+        h, _ = model(*full_view(data, views_cfg))          # h, not z: the projection head is discarded
         df = pd.DataFrame(h.cpu().numpy(), columns=[f"e{i}" for i in range(h.shape[1])])
         df.insert(0, "split", name)
         df.insert(0, "player_id", data.ids)
