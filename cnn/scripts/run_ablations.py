@@ -12,7 +12,7 @@ p.add_argument("--ablations", default="configs/ablations.yaml")
 p.add_argument("--set", nargs="*", default=[], help="overrides for the base config")
 args = p.parse_args()
 s = load_config(args.ablations)
-base = load_config(s["base_config"], args.set)
+base = load_config(s["base_config"], list(s.get("base_overrides", [])) + args.set)
 base["tensorboard"] = s.get("tensorboard", False)
 data = (load_split("train", base["data_dir"]), load_split("val", base["data_dir"]))   # load the CSVs once
 runs, summary = run_ablations(base, s["runs"], s["seeds"], out_dir=s["out_dir"], data=data)

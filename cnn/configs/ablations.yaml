@@ -3,6 +3,7 @@ base_config: configs/default.yaml
 out_dir: outputs/ablations          # run folders (checkpoints stay local; VI-6 probes use them)
 results_dir: results/ablations      # committed tables
 tensorboard: false
+base_overrides: ["train.lr=1.0e-3", "train.epochs=200", "early_stop=true"]   # M4 baseline settings the ablations ran with
 seeds: [0, 1, 2]
 runs:                               # name: overrides applied on top of the base config
   default: []
