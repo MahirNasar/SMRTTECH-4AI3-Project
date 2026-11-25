@@ -1,0 +1,12 @@
+# file: configs/ablations.yaml  (MA-5 shortcut ablations; python scripts/run_ablations.py)
+base_config: configs/default.yaml
+out_dir: outputs/ablations          # run folders (checkpoints stay local; VI-6 probes use them)
+results_dir: results/ablations      # committed tables
+tensorboard: false
+seeds: [0, 1, 2]
+runs:                               # name: overrides applied on top of the base config
+  default: []
+  career_only: ["views.chart_mode=off"]
+  identical_chart: ["views.chart_mode=same", "views.chart_noise=0"]
+  no_controls: ["views.season_drop=0", "views.weight_noise=0", "views.weight_drop=0", "views.pos_drop=0",
+                "views.chart_mode=same", "views.chart_noise=0"]
