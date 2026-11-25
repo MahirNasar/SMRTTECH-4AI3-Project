@@ -15,3 +15,20 @@ def test_embed_respects_chart_off_and_top_k_format():
     nb = top_k(ea, ea.player_id.tolist(), k=5)
     assert list(nb.columns) == ["query_id", "rank", "neighbour_id", "similarity"]
     assert len(nb) == 100 and not (nb.query_id == nb.neighbour_id).any()
+
+def test_halves_embedding_is_the_normalized_sum_of_both_halves():
+    import torch.nn.functional as F
+    from nbacnn.views import career_halves
+    from nbacnn.embed import embed_players
+    torch.manual_seed(0)
+    model, data = PlayerEncoder().eval(), make_fake_split(16, seed=2)
+    odd, even = career_halves(data)
+    expected = F.normalize(model(*odd)[0] + model(*even)[0], dim=1)
+    assert torch.allclose(embed_players(model, data), expected, atol=1e-6)
+    assert torch.allclose(embed_players(model, data).norm(dim=1), torch.ones(16))
+
+def test_unknown_embed_method_fails_loudly():
+    import pytest
+    from nbacnn.embed import embed_players
+    with pytest.raises(ValueError):
+        embed_players(PlayerEncoder().eval(), make_fake_split(4), method="whole")

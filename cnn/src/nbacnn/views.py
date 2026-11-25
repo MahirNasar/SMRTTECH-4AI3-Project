@@ -85,5 +85,14 @@ def make_views(batch, cfg, gen=None, train=True):
     return a, View(gb, mb, cb)
 
 def full_view(batch, cfg=None):
-    """Whole career, no augmentation: what we embed after training."""
+    """Whole career in one view, no augmentation (the guide's original embedding input).
+    Note: odd/even training never shows two adjacent seasons, but full careers mostly have them,
+    so this is out of distribution for an odd_even-trained model. embed.py uses career_halves."""
     return _view(batch, batch.mask, cfg or {}, None, train=False)
+
+def career_halves(batch, cfg=None):
+    """The whole career as its two fixed halves (odd / even qualified seasons), each with full
+    information (weight, position, shot chart) and no augmentation. Each half looks like the inputs
+    the model trained on, and together they cover every season. Used for embedding."""
+    ma, mb = season_split(batch.mask, "odd_even", 0.0, flip=False)
+    return _view(batch, ma, cfg or {}, None, train=False), _view(batch, mb, cfg or {}, None, train=False)

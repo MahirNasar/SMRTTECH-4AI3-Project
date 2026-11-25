@@ -47,3 +47,13 @@ def test_chart_off_hides_chart_in_training_and_embedding():
     va, vb = make_views(batch, cfg)
     assert va.chart.abs().max() == 0 and vb.chart.abs().max() == 0
     assert full_view(batch, cfg).chart.abs().max() == 0
+
+def test_career_halves_cover_the_career_like_training_views():
+    from nbacnn.views import career_halves
+    odd, even = career_halves(batch)
+    assert torch.equal(odd.mask + even.mask, batch.mask) and (odd.mask * even.mask).sum() == 0
+    for v in (odd, even):                                  # no two adjacent seasons, as in training
+        assert (v.mask[:, 1:] * v.mask[:, :-1]).sum() == 0
+        assert torch.equal(v.chart, batch.chart)           # full info: chart, weight, position kept
+        assert torch.equal(v.grid[:, WEIGHT_CH], batch.grid[:, WEIGHT_CH] * v.mask)
+        assert torch.equal(v.grid[:, POS_CH], batch.grid[:, POS_CH] * v.mask[:, None, :])

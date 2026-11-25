@@ -22,6 +22,10 @@ views:                  # Viroz
   chart_drop: 0.5       # chance of hiding the shot chart in a view
   chart_noise: 0.5      # std of noise added to the standardized shot chart
 
+embed:
+  method: halves        # halves | full. halves = normalize(h(odd seasons) + h(even seasons)), which
+                        # matches odd_even training; full = whole career in one view (out of distribution)
+
 train:                  # Mahir
   lr: 1.0e-3
   weight_decay: 1.0e-4

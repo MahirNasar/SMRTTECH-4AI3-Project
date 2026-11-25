@@ -60,18 +60,31 @@ Validation **top-5** runs along the red 0.90 line in `baseline/live.png`. That l
 
 ## 3. End-to-end check: embeddings and eye test
 
-`scripts/export_embeddings.py --checkpoint outputs/runs/baseline/best.pt` produced 1,207 × 34 embeddings and 6,035 neighbour rows (5 per player, no self-matches, searching all splits). Top-5 by cosine similarity, train/validation players only (test players are not inspected before M9):
+`scripts/export_embeddings.py --checkpoint outputs/runs/baseline/best.pt` produced 1,207 × 34 embeddings and 6,035 neighbour rows (5 per player, no self-matches, searching all splits).
+
+### Embedding method: average of the two halves (decision, 2026-11-25)
+The guide embedded each player's whole career in one view (`full_view`). A pre-integration audit found that this is out of distribution for an odd/even-trained model: training and validation views **never** contain two played seasons at adjacent ages (0%), but whole careers mostly do (79% of validation seasons). On this checkpoint, on validation:
+
+| Check | Value |
+|---|---|
+| odd half A → even half B (the validation metric) | top-1 0.713 |
+| whole career → B (contains all of B's seasons) | top-1 **0.657**, worse than half A alone |
+| cosine(whole career, own halves) vs cosine(half, half) | 0.948 / 0.943 vs 0.962 |
+
+So players are now embedded as **h = normalize(h(odd seasons) + h(even seasons))**, each half with full information (weight, position, shot chart) and no augmentation (`embed.method: halves` in `configs/default.yaml`; `src/nbacnn/embed.py`). Each half looks like the training inputs, and together they use every season. The guide's method remains available as `--method full` for comparison; the two methods share only 2.1 of each player's 5 neighbours on this checkpoint. The choice was made on this distribution argument, **not** on BPM.
+
+### Eye test (halves method, train/validation players only; test players are not inspected before M9)
 
 | Player (split) | Top-5 |
 |---|---|
-| Paul Pierce (val) | Paul George, Jayson Tatum, Antoine Walker, Anthony Davis, DeMarcus Cousins |
-| Steve Nash (train) | Mo Williams, Greivis Vásquez, Jameer Nelson, José Calderón, Tyronn Lue |
-| Stephen Curry (train) | Kyrie Irving, Desmond Bane, Khris Middleton, Mo Williams, Damian Lillard |
-| Ben Wallace (train) | Jason Collins, Jarred Vanderbilt, Willie Cauley-Stein, Michael Ruffin, Nic Claxton |
-| Dirk Nowitzki (train) | Keith Van Horn, Kevin Durant, Nikola Vučević, Al Jefferson, Charlie Villanueva |
-| LeBron James (train) | Shai Gilgeous-Alexander, Dwyane Wade, Russell Westbrook, Allen Iverson, Luka Dončić |
-| Dwight Howard (train) | Rudy Gobert, DeAndre Jordan, Tiago Splitter, Evan Mobley, Jarrett Allen |
-| Kawhi Leonard (train) | Caron Butler, Jabari Parker, Kobe Bryant, Franz Wagner, Rudy Gay |
-| Nikola Jokić (val) | Luka Dončić, Cade Cunningham, LaMelo Ball, James Harden, Damian Lillard |
+| Paul Pierce (val) | Paul George, Jayson Tatum, Kobe Bryant, Kevin Durant, Tracy McGrady |
+| Steve Nash (train) | Mo Williams, José Calderón, Greivis Vásquez, Deron Williams, Jameer Nelson |
+| Stephen Curry (train) | Kyrie Irving, Damian Lillard, Ray Allen, Chauncey Billups, D'Angelo Russell |
+| Ben Wallace (train) | Nic Claxton, Kwame Brown, Willie Cauley-Stein, Precious Achiuwa, Lou Amundson |
+| Dirk Nowitzki (train) | Keith Van Horn, Kevin Durant, Michael Porter Jr., Charlie Villanueva, Carmelo Anthony |
+| LeBron James (train) | Luka Dončić, Russell Westbrook, Dwyane Wade, Tracy McGrady, Dejounte Murray |
+| Dwight Howard (train) | Rudy Gobert, DeAndre Jordan, Tyson Chandler, Evan Mobley, Anthony Randolph |
+| Kawhi Leonard (train) | Tracy McGrady, Rudy Gay, Anthony Edwards, Kobe Bryant, Gordon Hayward |
+| Nikola Jokić (val) | Luka Dončić, Domantas Sabonis, Karl-Anthony Towns, DeMarcus Cousins, LeBron James |
 
-These overlap strongly with the prototype's lists (Pierce → George, Tatum, Walker; Curry → Bane, Middleton, Lillard, Irving, Mo Williams; Wallace → Cauley-Stein, Claxton). This is a sanity check, not an evaluation; the embeddings files themselves are produced properly at M5 (VI-4).
+These overlap with the prototype's lists (Pierce → George, Tatum, McGrady, Kobe; Nash → Mo Williams, Deron Williams, Calderón; Curry → Irving, Lillard; Wallace → Cauley-Stein, Claxton). This is a sanity check, not an evaluation; the embeddings files themselves are produced at M5 (VI-4).
