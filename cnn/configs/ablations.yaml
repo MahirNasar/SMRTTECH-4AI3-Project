@@ -1,9 +1,10 @@
 # file: configs/ablations.yaml  (MA-5 shortcut ablations; python scripts/run_ablations.py)
 base_config: configs/default.yaml
-out_dir: outputs/ablations          # run folders (checkpoints stay local; VI-6 probes use them)
+out_dir: outputs/ablations_final    # run folders (checkpoints stay local; VI-6 probes use them)
 results_dir: results/ablations      # committed tables
 tensorboard: false
-base_overrides: ["train.lr=1.0e-3", "train.epochs=200", "early_stop=true"]   # M4 baseline settings the ablations ran with
+base_overrides: ["train.lr=3.0e-4", "train.epochs=400", "early_stop=false"]   # the M6-chosen config, full-length runs
+# (the earlier early-stopped table in results/ablations/early_stopped/ used lr 1.0e-3, 200 epochs, early_stop true, out_dir outputs/ablations)
 seeds: [0, 1, 2]
 runs:                               # name: overrides applied on top of the base config
   default: []
